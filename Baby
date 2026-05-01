@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Baptism Invitation Creator</title>
+    <style>
+        :root {
+            --primary-theme: #A2C2E1; 
+            --app-bg: #FDFBF7;
+            --card-border: #E8E2D9;
+            --selected-font: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            font-family: var(--selected-font);
+            background-color: #f7f9fc;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.5s ease;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Baby Background Styles */
+        body.pattern-clouds {
+            background-color: #ebf4ff;
+            background-image: radial-gradient(#ffffff 20%, transparent 20%), radial-gradient(#ffffff 20%, transparent 20%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        body.pattern-dots {
+            background-color: #fff5f8;
+            background-image: radial-gradient(#ffd1dc 10%, transparent 10%);
+            background-size: 20px 20px;
+        }
+
+        body.pattern-stars {
+            background-color: #fdfdfd;
+            background-image:  linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), 
+                               linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 30px;
+            padding: 35px;
+            border: 2px solid white;
+            box-shadow: 0 15px 35px rgba(162, 194, 225, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        header { text-align: center; margin-bottom: 25px; }
+        h2 { color: #5a5a5a; font-weight: 300; margin-bottom: 5px; }
+
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px 2px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.65rem;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .option.active {
+            border: 2px solid var(--primary-theme);
+            background-color: #f0f7ff;
+            transform: scale(1.05);
+        }
+
+        .color-opt {
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        label { display: block; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #9ea8b5; margin-bottom: 8px; letter-spacing: 0.5px; }
+        
+        input, textarea {
+            width: 100%; padding: 14px; margin-bottom: 15px;
+            border: 1px solid #eef2f7; border-radius: 12px;
+            background: #fbfcfe; box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        .btn-generate {
+            width: 100%; background-color: var(--primary-theme);
+            color: white; border: none; padding: 16px;
+            border-radius: 50px; font-weight: bold; cursor: pointer;
+            font-size: 0.9rem; text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        hr { border: 0; border-top: 1px solid #f0f0f0; margin: 20px 0; }
+    </style>
+</head>
+<body id="mainBody" class="pattern-clouds">
+
+<div class="container" id="inviteCard">
+    <header>
+        <h2>Baptism Invitation</h2>
+        <p style="font-size: 0.7rem; color: #A2C2E1; letter-spacing: 2px; font-weight: bold;">BABY EDITION</p>
+    </header>
+
+    <!-- FONT STYLE SELECTION -->
+    <label>Font Style</label>
+    <div class="selection-grid">
+        <div class="option active" onclick="changeFont('serif', this)">Ag<br>Classic</div>
+        <div class="option" onclick="changeFont('cursive', this)">Ag<br>Sweet</div>
+        <div class="option" onclick="changeFont('sans-serif', this)">Ag<br>Clean</div>
+        <div class="option" onclick="changeFont('Georgia', this)">Ag<br>Royal</div>
+        <div class="option" onclick="changeFont('Comic Sans MS', this)">Ag<br>Playful</div>
+    </div>
+
+    <!-- BABY THEME COLOR SELECTION -->
+    <label>Theme Color</label>
+    <div class="selection-grid">
+        <div class="color-opt" style="background:#A2C2E1" onclick="changeColor('#A2C2E1', this)">✓</div>
+        <div class="color-opt" style="background:#FBC4AB" onclick="changeColor('#FBC4AB', this)"></div>
+        <div class="color-opt" style="background:#C1E1C1" onclick="changeColor('#C1E1C1', this)"></div>
+        <div class="color-opt" style="background:#E6B3E1" onclick="changeColor('#E6B3E1', this)"></div>
+        <div class="color-opt" style="background:#FDE49C" onclick="changeColor('#FDE49C', this)"></div>
+    </div>
+
+    <!-- BABY BACKGROUND PATTERN SELECTION -->
+    <label>Background Pattern</label>
+    <div class="selection-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="option active" onclick="changePattern('clouds', this)">CLOUDS</div>
+        <div class="option" onclick="changePattern('dots', this)">DOTS</div>
+        <div class="option" onclick="changePattern('stars', this)">STARS</div>
+        <div class="option" onclick="changePattern('none', this)">PLAIN</div>
+    </div>
+
+    <hr>
+
+    <label>Child's Name *</label>
+    <input type="text" placeholder="e.g. Baby Noah James">
+
+    <div style="display:flex; gap:10px">
+        <div style="flex:1">
+            <label>Date *</label>
+            <input type="date">
+        </div>
+        <div style="flex:1">
+            <label>Time *</label>
+            <input type="text" placeholder="11:30 AM">
+        </div>
+    </div>
+
+    <label>Venue *</label>
+    <input type="text" placeholder="Grace Community Church">
+
+    <!-- ADDED MAP LINK SECTION -->
+    <label>Google Maps URL</label>
+    <input type="text" placeholder="https://maps.google.com/...">
+
+    <button class="btn-generate">Create Invitation</button>
+</div>
+
+<script>
+    function changeFont(fontFamily, element) {
+        document.getElementById('inviteCard').style.fontFamily = fontFamily;
+        clearActive(element.parentElement);
+        element.classList.add('active');
+    }
+
+    function changeColor(colorCode, element) {
+        document.documentElement.style.setProperty('--primary-theme', colorCode);
+        const siblings = element.parentElement.children;
+        for(let s of siblings) s.innerText = "";
+        element.innerText = "✓";
+    }
+
+    function changePattern(pattern, element) {
+        const body = document.getElementById('mainBody');
+        body.className = ""; 
+        if(pattern !== 'none') {
+            body.classList.add('pattern-' + pattern);
+        } else {
+            body.style.backgroundColor = "#f7f9fc";
+        }
+        
+        const children = element.parentElement.querySelectorAll('.option');
+        children.forEach(child => child.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    function clearActive(parent) {
+        const children = parent.querySelectorAll('.option');
+        children.forEach(child => child.classList.remove('active'));
+    }
+</script>
+
+</body>
+</html>
