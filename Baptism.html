@@ -12,6 +12,7 @@
             --text-muted: #888;
             --input-bg: #181818;
             --border-color: #333;
+            --selection-glow: #a8d5ba;
         }
 
         body {
@@ -39,8 +40,9 @@
         section { margin-bottom: 30px; }
         h3 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
 
-        /* Selection Grids (Fonts, Colors, Patterns) */
-        .grid-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; }
+        /* Selection Grids */
+        .grid-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
+        
         .option-box {
             background: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -49,9 +51,29 @@
             text-align: center;
             cursor: pointer;
             font-size: 0.7rem;
+            transition: 0.3s;
         }
-        .option-box.active { border: 2px solid #a8d5ba; background: #252525; }
-        .color-circle { width: 100%; height: 60px; border-radius: 8px; }
+
+        /* Logic for selection styling */
+        .option-box.selected {
+            border: 2px solid var(--selection-glow);
+            background: #252525;
+            box-shadow: 0 0 10px rgba(168, 213, 186, 0.2);
+        }
+
+        .color-circle { 
+            width: 100%; 
+            height: 60px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            border: 2px solid transparent;
+            box-sizing: border-box;
+        }
+        
+        .color-circle.selected {
+            border: 3px solid white;
+            transform: scale(1.05);
+        }
 
         /* Form Layout */
         .form-group { margin-bottom: 15px; }
@@ -70,9 +92,9 @@
             color: white;
             box-sizing: border-box;
             font-size: 0.9rem;
+            outline: none;
         }
-
-        textarea { height: 80px; resize: none; }
+        input:focus { border-color: var(--primary-green); }
 
         .btn-generate {
             width: 100%;
@@ -86,9 +108,11 @@
             cursor: pointer;
             margin-top: 20px;
             text-transform: uppercase;
+            transition: 0.3s;
         }
 
-        .btn-generate:hover { background: #5f8d66; }
+        .btn-generate:hover { background: #5f8d66; transform: translateY(-2px); }
+        .btn-generate:active { transform: translateY(0); }
     </style>
 </head>
 <body>
@@ -97,97 +121,114 @@
     <h1>Baptism Invitation</h1>
     <p class="subtitle">CREATE YOUR SHAREABLE INVITE LINK</p>
 
-    <!-- Style Selection -->
+    <!-- Font Style -->
     <section>
         <h3>Font Style</h3>
-        <div class="grid-options">
-            <div class="option-box active"><i>Ag</i><br>EDITORIAL</div>
-            <div class="option-box">Ag<br>CLASSIC</div>
-            <div class="option-box" style="font-family: serif;">Ag<br>PLAYFAIR</div>
-            <div class="option-box" style="font-variant: small-caps;">Ag<br>CINZEL</div>
-            <div class="option-box">Ag<br>ROMANTIC</div>
+        <div class="grid-options" id="fontSelection">
+            <div class="option-box selected" data-value="Editorial"><i>Ag</i><br>EDITORIAL</div>
+            <div class="option-box" data-value="Classic">Ag<br>CLASSIC</div>
+            <div class="option-box" data-value="Playfair" style="font-family: serif;">Ag<br>PLAYFAIR</div>
+            <div class="option-box" data-value="Cinzel" style="font-variant: small-caps;">Ag<br>CINZEL</div>
+            <div class="option-box" data-value="Romantic">Ag<br>ROMANTIC</div>
         </div>
     </section>
 
+    <!-- Theme Color -->
     <section>
         <h3>Theme Color</h3>
-        <div class="grid-options">
-            <div class="color-circle" style="background: #527958;"></div>
-            <div class="color-circle" style="background: #b67c84;"></div>
-            <div class="color-circle" style="background: #28448d;"></div>
-            <div class="color-circle" style="background: #900c27;"></div>
-            <div class="color-circle" style="background: #222;"></div>
+        <div class="grid-options" id="colorSelection">
+            <div class="color-circle selected" style="background: #527958;" data-color="#527958"></div>
+            <div class="color-circle" style="background: #b67c84;" data-color="#b67c84"></div>
+            <div class="color-circle" style="background: #28448d;" data-color="#28448d"></div>
+            <div class="color-circle" style="background: #900c27;" data-color="#900c27"></div>
+            <div class="color-circle" style="background: #222;" data-color="#222"></div>
         </div>
     </section>
 
-    <!-- Child & Family Details -->
     <section>
         <h3>Child & Parents' Details</h3>
         <div class="form-group">
             <label>Child's Name <span>*</span></label>
-            <input type="text" placeholder="e.g. Gabriel Thomas">
+            <input type="text" id="childName" placeholder="e.g. Gabriel Thomas">
         </div>
         <div class="row">
             <div class="col">
                 <label>Father's Name <span>*</span></label>
-                <input type="text" placeholder="e.g. John Doe">
+                <input type="text" id="fatherName" placeholder="e.g. John Doe">
             </div>
             <div class="col">
                 <label>Mother's Name <span>*</span></label>
-                <input type="text" placeholder="e.g. Jane Doe">
+                <input type="text" id="motherName" placeholder="e.g. Jane Doe">
             </div>
         </div>
     </section>
 
-    <!-- Event Details -->
     <section>
         <h3>Event Details</h3>
         <div class="row">
             <div class="col">
                 <label>Date <span>*</span></label>
-                <input type="date">
+                <input type="date" id="eventDate">
             </div>
             <div class="col">
                 <label>Time <span>*</span></label>
-                <input type="text" placeholder="e.g. 10:30 AM">
+                <input type="text" id="eventTime" placeholder="e.g. 10:30 AM">
             </div>
         </div>
         <div class="form-group" style="margin-top: 15px;">
-            <label>Church / Venue Name <span>*</span></label>
-            <input type="text" placeholder="e.g. St. Mary's Cathedral">
-        </div>
-        <div class="form-group">
-            <label>Venue Address</label>
-            <input type="text" placeholder="e.g. Downtown, City Name">
+            <label>Church Name <span>*</span></label>
+            <input type="text" id="venueName" placeholder="e.g. St. Mary's Cathedral">
         </div>
     </section>
 
-    <!-- Personal Touch -->
-    <section>
-        <h3>Blessings & Personal Touch</h3>
-        <div class="form-group">
-            <label>Opening Verse / Quote (Optional)</label>
-            <textarea placeholder="e.g. 'I have called you by name; you are mine.' - Isaiah 43:1"></textarea>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section>
-        <h3>Contact</h3>
-        <div class="row">
-            <div class="col">
-                <label>RSVP Phone</label>
-                <input type="text" placeholder="e.g. 9995558877">
-            </div>
-            <div class="col">
-                <label>Google Maps URL</label>
-                <input type="text" placeholder="https://maps.google.com/...">
-            </div>
-        </div>
-    </section>
-
-    <button class="btn-generate">Generate Invitation Link</button>
+    <button class="btn-generate" onclick="generateInvite()">Generate Invitation Link</button>
 </div>
+
+<script>
+    // --- 1. Selection Logic for Fonts ---
+    const fontBoxes = document.querySelectorAll('#fontSelection .option-box');
+    fontBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            fontBoxes.forEach(b => b.classList.remove('selected'));
+            box.classList.add('selected');
+        });
+    });
+
+    // --- 2. Selection Logic for Colors ---
+    const colorCircles = document.querySelectorAll('#colorSelection .color-circle');
+    colorCircles.forEach(circle => {
+        circle.addEventListener('click', () => {
+            colorCircles.forEach(c => c.classList.remove('selected'));
+            circle.classList.add('selected');
+            
+            // Update the main button color to match the theme
+            document.querySelector('.btn-generate').style.background = circle.dataset.color;
+        });
+    });
+
+    // --- 3. Generate Logic ---
+    function generateInvite() {
+        const name = document.getElementById('childName').value;
+        const selectedFont = document.querySelector('#fontSelection .selected').dataset.value;
+        const selectedColor = document.querySelector('#colorSelection .selected').dataset.color;
+
+        if (!name) {
+            alert("Please enter the child's name!");
+            return;
+        }
+
+        // Simulating the generation process
+        const button = document.querySelector('.btn-generate');
+        button.innerText = "GENERATING...";
+        button.disabled = true;
+
+        setTimeout(() => {
+            alert(`Success! Invitation generated for ${name}.\nFont: ${selectedFont}\nColor: ${selectedColor}\n\nLink: https://invites.example.com/baptism-${name.replace(/\s+/g, '-').toLowerCase()}`);
+            button.innerText = "GENERATE INVITATION LINK";
+            button.disabled = false;
+        }, 1500);
+    }
+</script>
 
 </body>
 </html>
